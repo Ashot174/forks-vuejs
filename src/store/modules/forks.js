@@ -45,7 +45,6 @@ export default {
                     per_page: 100,
                     page: 1
                 })
-                console.log(response)
                 store.commit('loadForks', response)
             } catch (e) {
                 alert("Ошибка: " + e.message)
