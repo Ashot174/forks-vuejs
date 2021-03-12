@@ -4,6 +4,7 @@
   </div>
 </template>
 
+
 <style scoped>
   .about h1 {
     margin-top: 30px;
