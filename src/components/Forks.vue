@@ -14,7 +14,7 @@
                 <td>{{fork.full_name}}</td>
                 <td>{{fork.owner.login}}</td>
                 <td>{{fork.stargazers_count}}</td>
-                <td><a :href="`https://github.com/${fork.full_name}`">{{`Reference to ${fork.full_name} fork's repo`}}</a></td>
+                <td><a target="_blank" :href="`https://github.com/${fork.full_name}`">{{`Reference to ${fork.full_name} fork's repo`}}</a></td>
                 <td><i class="far fa-star"  v-on:click="toggleFavorite($event, fork)" :class="getClass(fork.full_name)"></i></td>
             </tr>
 
