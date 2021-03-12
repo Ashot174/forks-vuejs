@@ -22,13 +22,13 @@
         <nav aria-label="Page navigation example" class="navigation">
             <ul class="pagination">
                 <li class="page-item">
-                    <a class="page-link" v-if="page != 1" @click="page--"> Previous </a>
+                    <a class="page-link" v-if="page != 1" @click="pagePrevious"> Previous </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" v-for="pageNumber in pages.slice(page-1, page+5)" @click="page = pageNumber"> {{pageNumber}} </a>
+                    <a class="page-link" v-for="pageNumber in pages.slice(page-1, page+5)" @click="pageCertain(pageNumber)"> {{pageNumber}} </a>
                 </li>
                 <li class="page-item">
-                    <a  @click="page++" v-if="page < pages.length" class="page-link"> Next </a>
+                    <a  v-on:click="pageNext" v-if="page < pages.length" class="page-link"> Next </a>
                 </li>
             </ul>
         </nav>
@@ -60,7 +60,8 @@
 
             displayedForks() {
                 return this.paginate(this.forks);
-            }
+            },
+
         },
         methods: {
             setPages () {
@@ -89,12 +90,31 @@
             },
             getClass(key){
                 return localStorage.getItem(key) === null ? null : 'favorite'
+            },
+            pageNext() {
+                this.page = this.page + 1
+                this.$router.push({ name: 'forksSearch', params: { owner: this.$route.params.owner, repo: this.$route.params.repo, page: this.page.toString() }})
+            },
+            pagePrevious() {
+                this.page = this.page - 1
+                this.$router.push({ name: 'forksSearch', params: { owner: this.$route.params.owner, repo: this.$route.params.repo, page: this.page.toString() }})
+            },
+
+            pageCertain(pageNumber) {
+                this.page = pageNumber
+                if (+this.$route.params.page !== this.page){
+                    this.$router.push({ name: 'forksSearch', params: { owner: this.$route.params.owner, repo: this.$route.params.repo, page: this.page.toString() }})
+                }
             }
+
         },
         watch: {
             forks () {
                 this.setPages();
-            }
+                if(this.$route.params.page && !isNaN(+this.$route.params.page ) && +this.$route.params.page <= Math.ceil(this.forks.length / this.perPage)){
+                    this.page = +this.$route.params.page
+                }
+            },
         },
 
         filters: {
@@ -104,7 +124,11 @@
         },
         mounted() {
             this.setPages()
-        }
+            if(this.$route.params.page && !isNaN(+this.$route.params.page ) && +this.$route.params.page <= Math.ceil(this.forks.length / this.perPage)){
+                this.page = +this.$route.params.page
+            }
+        },
+
     }
 </script>
 
